@@ -7,10 +7,10 @@
 html {
   font-family: 'Open Sans', sans-serif;
 }
-
+  
 body {
   margin: 0;
-  background: #4d4d4d;
+  background: #6b7a8f;  /*#efb5a3 #b85042 #316879 #4a536b #4d4d4d #efc9af*/ 
 }
 
 .slide-in-left-enter {

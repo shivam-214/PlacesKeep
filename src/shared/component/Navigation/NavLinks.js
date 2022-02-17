@@ -2,11 +2,11 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import classes from "./NavLinks.module.css";
+import "./NavLinks.css";
 import { authActions } from "../../../store/auth-slice";
 
-const activeClassHandler = ({ isActive }) =>
-  isActive ? `${classes.active}` : "";
+// const activeClassHandler = ({ isActive }) =>
+//   isActive ? `${classes.active}` : "";
 
 const NavLinks = (props) => {
   const dispatch = useDispatch();
@@ -20,29 +20,33 @@ const NavLinks = (props) => {
   };
 
   return (
-    <ul className={classes["nav-links"]}>
+    <ul className={"nav-links"}>
       <li>
-        <NavLink to="/" end className={activeClassHandler}>
+        <NavLink to="/" end 
+        // className={activeClassHandler}
+        >
           ALL USERS
         </NavLink>
       </li>
       {isLoggedIn && (
         <li>
-          <NavLink to="/u1/places" className={activeClassHandler}>
+          <NavLink to="/u1/places" 
+          
+          >
             MY PLACES
           </NavLink>
         </li>
       )}
       {isLoggedIn && (
         <li>
-          <NavLink to="/places/new" className={activeClassHandler}>
+          <NavLink to="/places/new">
             ADD PLACE
           </NavLink>
         </li>
       )}
       {!isLoggedIn && (
         <li>
-          <NavLink to="/auth" className={activeClassHandler}>
+          <NavLink to="/auth" >
             AUTHENTICATION
           </NavLink>
         </li>
