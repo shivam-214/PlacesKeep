@@ -69,32 +69,38 @@ const Auth = () => {
 
     if (isLoginMode) {
       try {
-        await sendRequest("http://localhost:5000/api/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-        });
-        dispatch(authActions.login());
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/users/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: formState.inputs.email.value,
+              password: formState.inputs.password.value,
+            }),
+          }
+        );
+        dispatch(authActions.login(responseData.user.id));
       } catch (err) {}
     } else {
       try {
-        await sendRequest("http://localhost:5000/api/users/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-        });
-        dispatch(authActions.login());
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/users/signup",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: formState.inputs.name.value,
+              email: formState.inputs.email.value,
+              password: formState.inputs.password.value,
+            }),
+          }
+        );
+        dispatch(authActions.login(responseData.user.id));
       } catch (err) {}
     }
   };
@@ -136,8 +142,8 @@ const Auth = () => {
             type="text"
             label="Password"
             element="input"
-            validators={[VALIDATOR_MINLENGTH(5)]}
-            errorText="Please provide a valid password, at least 5 character."
+            validators={[VALIDATOR_MINLENGTH(6)]}
+            errorText="Please provide a valid password, at least 6 character."
             onInput={inputHandler}
           ></Input>
 

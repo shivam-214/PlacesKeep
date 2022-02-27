@@ -47,7 +47,7 @@ const getPlacesByUserId = async (req, res, next) => {
   }
 
   //if(!places || places.length===0)
-  if (!userWithPlaces || userWithPlaces.places.length === 0) {
+  if (!userWithPlaces) {
     const error = new httpError(
       "Could not find places for the provided user id.",
       404
@@ -67,7 +67,7 @@ const createPlace = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return next(
       new httpError("Invalid inputs passed, please check your data.", 422)
-    ); //next() is use for async function and throw for sync
+    );
   }
 
   const { title, description, address, creator } = req.body;
@@ -82,10 +82,10 @@ const createPlace = async (req, res, next) => {
   const createdPlace = new Place({
     title,
     description,
-    image:
-      "https://lh5.googleusercontent.com/p/AF1QipM5a6VSARJB0S0uG00NNsvOPsJJGT9VpxQfi72B=w408-h306-k-no",
-    location: coordinates,
     address,
+    location: coordinates,
+    image:
+      "https://lh5.googleusercontent.com/p/AF1QipPX6zJ9Lnp3WiKGwNutyupb3hI3ylfuqW_ZCyyP=w408-h306-k-no", // => File Upload module, will be replaced with real image url
     creator,
   });
 
@@ -99,12 +99,9 @@ const createPlace = async (req, res, next) => {
     );
     return next(error);
   }
-
+  
   if (!user) {
-    const error = new httpError(
-      "Could not find the user for provided id, please try again.",
-      404
-    );
+    const error = new httpError("Could not find user for provided id.", 404);
     return next(error);
   }
 
@@ -120,6 +117,7 @@ const createPlace = async (req, res, next) => {
       "Creating place failed, please try again.",
       500
     );
+    console.log(err);
     return next(error);
   }
 

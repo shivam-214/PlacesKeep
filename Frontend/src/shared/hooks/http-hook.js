@@ -19,7 +19,7 @@ const useHttp = () => {
         body: requestConfig ? requestConfig.body : null,
         signal: httpAbortCtrl.signal,
       });
-
+      
       const data = await response.json();
 
       activeHttpRequests.current = activeHttpRequests.current.filter(
@@ -29,6 +29,7 @@ const useHttp = () => {
       if (!response.ok) {
         throw new Error(data.message);
       }
+      
       setIsLoading(false);
       return data;
     } catch (err) {

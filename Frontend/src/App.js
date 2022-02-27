@@ -13,7 +13,6 @@ function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   let routes;
-
   if (isLoggedIn) {
     routes = (
       <Routes>

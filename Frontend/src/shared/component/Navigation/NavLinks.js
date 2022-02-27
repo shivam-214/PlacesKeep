@@ -11,6 +11,7 @@ import { authActions } from "../../../store/auth-slice";
 const NavLinks = (props) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userId = useSelector((state) => state.auth.userId);
 
   const navigate = useNavigate();
 
@@ -22,33 +23,27 @@ const NavLinks = (props) => {
   return (
     <ul className={"nav-links"}>
       <li>
-        <NavLink to="/" end 
-        // className={activeClassHandler}
+        <NavLink
+          to="/"
+          end
+          // className={activeClassHandler}
         >
           ALL USERS
         </NavLink>
       </li>
       {isLoggedIn && (
         <li>
-          <NavLink to="/u1/places" 
-          
-          >
-            MY PLACES
-          </NavLink>
+          <NavLink to={`/${userId}/places`}>MY PLACES</NavLink>
         </li>
       )}
       {isLoggedIn && (
         <li>
-          <NavLink to="/places/new">
-            ADD PLACE
-          </NavLink>
+          <NavLink to="/places/new">ADD PLACE</NavLink>
         </li>
       )}
       {!isLoggedIn && (
         <li>
-          <NavLink to="/auth" >
-            AUTHENTICATION
-          </NavLink>
+          <NavLink to="/auth">AUTHENTICATION</NavLink>
         </li>
       )}
       {isLoggedIn && (

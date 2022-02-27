@@ -2,7 +2,6 @@ const axios = require("axios");
 const httpError = require("../models/http-error");
 
 const API_KEY = "QEWebmTB8hQukiGayFs_kjIOGHBJ92-fM35XyKrow-w"; //API_KEY for "hereapi" geocoding
-// const API_KEY = "lAQfpfm1BNm0ebJZJfEkGVk04cOmbnHn1LqZYHua3kI"; 
 
 async function getCoordsForAddress(address) {
   const response = await axios.get(
@@ -11,8 +10,8 @@ async function getCoordsForAddress(address) {
     )}&apikey=${API_KEY}`
   );
 
-  const data = response.data;
-  if (!response.status === 200 || !data) {
+  const responseData = response.data;
+  if (!response.status === 200 || !responseData) {
     const error = new httpError(
       "Could not find the request for the specified address.",
       422
@@ -20,7 +19,7 @@ async function getCoordsForAddress(address) {
     throw error;
   }
 
-  const coordinates = data.items[0].position;
+  const coordinates = responseData.items[0].position;
   return coordinates;
 }
 
