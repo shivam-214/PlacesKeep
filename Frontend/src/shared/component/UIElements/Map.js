@@ -1,39 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import classes from "./Map.module.css";
 
-//<--------------Using Openlayers JAVASCRIPT MAP API------------------------>>
+//<--------------MapBox map api--------------------------------------->>
+const ACCESS_TOKEN =
+  "pk.eyJ1Ijoic2hpdmFtLTIxNCIsImEiOiJjbDA0eXN1anMwanI4M2Nxd2U4cmthaTdmIn0.dG_tl0WkmBFP3K32TlEr5A";
 
-// const Map = (props) => {
-//   const mapRef = useRef();
-
-//   const { center, zoom } = props;
-
-//   useEffect(() => {
-//     new window.ol.Map({
-//       target: mapRef.current.id,
-//       layers: [
-//         new window.ol.layer.Tile({
-//           source: new window.ol.source.OSM(),
-//         }),
-//       ],
-//       view: new window.ol.View({
-//         center: window.ol.proj.fromLonLat([center.lng, center.lat]),
-//         zoom: zoom,
-//       }),
-//     });
-//   }, [center, zoom]);
-
-//   return (
-//     <div
-//       ref={mapRef}
-//       className={`${classes.map} ${props.className}`}
-//       style={props.style}
-//       id="map"
-//     ></div>
-//   );
-// };
-
-//<----------USING GOOGLE MAPS JAVASCRIPT API(for developer purpose only)--------->
+window.mapboxgl.accessToken = ACCESS_TOKEN;
 
 const Map = (props) => {
   const mapRef = useRef();
@@ -41,12 +13,34 @@ const Map = (props) => {
   const { center, zoom } = props;
 
   useEffect(() => {
-    const map = new window.google.maps.Map(mapRef.current, {
-      center: center,
+    const map = new window.mapboxgl.Map({
+      container: mapRef.current,
+      style: "mapbox://styles/shivam-214/cl050aizd000k14o59evhkjjt",
+      center: [center.lng, center.lat],
       zoom: zoom,
+      pitch: 50,
     });
 
-    new window.google.maps.Marker({ position: center, map: map });
+    new window.mapboxgl.Marker().setLngLat([center.lng, center.lat]).addTo(map);
+
+    //<------------For directions---------------------->
+    // const directions = new window.MapboxDirections({
+    //   accessToken: ACCESS_TOKEN,
+    // });
+    // map.addControl(directions, 'top-left');
+
+    //<------------Current Location---------------------->
+    map.addControl(
+      new window.mapboxgl.GeolocateControl({
+        positionOption: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+      })
+    );
+
+    //<------------Zoom in, Zoom out and Compass---------------------->
+    map.addControl(new window.mapboxgl.NavigationControl());
   }, [center, zoom]);
 
   return (
@@ -57,7 +51,30 @@ const Map = (props) => {
     ></div>
   );
 };
+//<----------USING GOOGLE MAPS JAVASCRIPT API(for developer purpose only)--------->
 
+// const Map = (props) => {
+//   const mapRef = useRef();
+
+//   const { center, zoom } = props;
+
+//   useEffect(() => {
+//     const map = new window.google.maps.Map(mapRef.current, {
+//       center: center,
+//       zoom: zoom,
+//     });
+
+//     new window.google.maps.Marker({ position: center, map: map });
+//   }, [center, zoom]);
+
+//   return (
+//     <div
+//       ref={mapRef}
+//       className={`${classes.map} ${props.className}`}
+//       style={props.style}
+//     ></div>
+//   );
+// };
 
 //<----------------Using Here Map JS Api------------------------->
 // const API_KEY = "lAQfpfm1BNm0ebJZJfEkGVk04cOmbnHn1LqZYHua3kI";
@@ -67,16 +84,16 @@ const Map = (props) => {
 
 //   const { center, zoom } = props;
 
-//   var platform = new H.service.Platform({
+//   var platform = new window.H.service.Platform({
 //     apikey: API_KEY,
 //   });
 
-//   var defaultLayers = platform.createDefaultLayers();
+//   var defaultLayers = window.platform.createDefaultLayers();
 
 //   // Instantiate (and display) a map object:
 
 //   useEffect(() => {
-//     var map = new H.Map(
+//     var map = new window.H.Map(
 //       document.getElementById("map"),
 //       defaultLayers.vector.normal.map,
 //       {
@@ -85,8 +102,8 @@ const Map = (props) => {
 //       }
 //     );
 
-//     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-//     var ui = H.ui.UI.createDefault(map, defaultLayers);
+//     var behavior = new window.H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+//     var ui = window.H.ui.UI.createDefault(map, defaultLayers);
 
 //     // Define a variable holding SVG mark-up that defines an icon image:
 //     var svgMarkup =
@@ -98,8 +115,8 @@ const Map = (props) => {
 //       'fill="white">P</text></svg>';
 
 //     // Create an icon, an object holding the latitude and longitude, and a marker:
-//     var icon = new H.map.Icon(svgMarkup);
-//     var marker = new H.map.Marker(center, { icon: icon });
+//     var icon = new window.H.map.Icon(svgMarkup);
+//     var marker = new window.H.map.Marker(center, { icon: icon });
 
 //     // Add the marker to the map and center the map at the location of the marker:
 //     map.addObject(marker);
