@@ -50,8 +50,7 @@ const signup = async (req, res, next) => {
     name,
     email,
     password,
-    image:
-      "https://media-exp1.licdn.com/dms/image/C4E03AQFXmQnTMPtAEA/profile-displayphoto-shrink_200_200/0/1614094745034?e=1648684800&v=beta&t=XLWbESecqELTZMEXmHQmFW7HMdsa2jo5ClTwBqdUMz4",
+    image: req.file.path,
     places: [],
   });
 

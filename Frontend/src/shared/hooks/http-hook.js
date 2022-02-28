@@ -14,12 +14,14 @@ const useHttp = () => {
       activeHttpRequests.current.push(httpAbortCtrl);
 
       const response = await fetch(url, {
-        method: requestConfig ? requestConfig.method : "GET",
-        headers: requestConfig ? requestConfig.headers : {},
-        body: requestConfig ? requestConfig.body : null,
+        method:
+          requestConfig && requestConfig.method ? requestConfig.method : "GET",
+        headers:
+          requestConfig && requestConfig.headers ? requestConfig.headers : {},
+        body: requestConfig && requestConfig.body ? requestConfig.body : null,
         signal: httpAbortCtrl.signal,
       });
-      
+
       const data = await response.json();
 
       activeHttpRequests.current = activeHttpRequests.current.filter(
@@ -29,7 +31,7 @@ const useHttp = () => {
       if (!response.ok) {
         throw new Error(data.message);
       }
-      
+
       setIsLoading(false);
       return data;
     } catch (err) {

@@ -1,12 +1,13 @@
 import React, { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/auth-slice";
-import useHttp from "../../shared/hooks/http-hook";
 
+import useHttp from "../../shared/hooks/http-hook";
+import useForm from "../../shared/hooks/form-hook";
 import Button from "../../shared/component/FormElements/Button";
 import Input from "../../shared/component/FormElements/Input";
 import Card from "../../shared/component/UIElements/Card";
-import useForm from "../../shared/hooks/form-hook";
+import ImageUpload from "../../shared/component/FormElements/ImageUpload";
 import ErrorModal from "../../shared/component/UIElements/ErrorModal";
 import LoadingSpiner from "../../shared/component/UIElements/LoadingSpinner";
 
@@ -46,6 +47,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -57,6 +59,10 @@ const Auth = () => {
             value: "",
             isValid: false,
           },
+          image: {
+            value: null,
+            isValid: false,
+          },
         },
         false
       );
@@ -66,6 +72,8 @@ const Auth = () => {
 
   const authSubmitHandler = async (event) => {
     event.preventDefault();
+
+    console.log(formState.inputs);
 
     if (isLoginMode) {
       try {
@@ -86,18 +94,17 @@ const Auth = () => {
       } catch (err) {}
     } else {
       try {
+        const formData = new FormData();
+        formData.append("email", formState.inputs.email.value);
+        formData.append("name", formState.inputs.name.value);
+        formData.append("password", formState.inputs.password.value);
+        formData.append("image", formState.inputs.image.value);
+
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: formState.inputs.name.value,
-              email: formState.inputs.email.value,
-              password: formState.inputs.password.value,
-            }),
+            body: formData,
           }
         );
         dispatch(authActions.login(responseData.user.id));
@@ -110,11 +117,8 @@ const Auth = () => {
       <ErrorModal error={error} onClear={clearError} />
       <Card className={classes.authentication}>
         {isLoading && <LoadingSpiner asOverlay />}
-        <form
-          onSubmit={authSubmitHandler}
-          className={classes["authentication form"]}
-        >
-          <h2>{isLoginMode ? "Login Required" : "Signup Requied"}</h2>
+        <form onSubmit={authSubmitHandler}>
+          <h2>{isLoginMode ? "Login Required" : "Signup Required"}</h2>
           <hr />
           {!isLoginMode && (
             <Input
@@ -127,6 +131,18 @@ const Auth = () => {
               onInput={inputHandler}
             ></Input>
           )}
+
+          {!isLoginMode && (
+            <ImageUpload
+              id="image"
+              center
+              onInput={inputHandler}
+              errorText={
+                "Please provide an image with (.png/.jpeg/.jpg) format only."
+              }
+            />
+          )}
+
           <Input
             id="email"
             type="text"

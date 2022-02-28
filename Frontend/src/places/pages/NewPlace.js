@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import classes from "./PlaceForm.module.css";
+
 import Button from "../../shared/component/FormElements/Button";
 import Input from "../../shared/component/FormElements/Input";
 import {
@@ -10,10 +12,9 @@ import {
 } from "../../shared/util/validators";
 import useForm from "../../shared/hooks/form-hook";
 import useHttp from "../../shared/hooks/http-hook";
-
-import classes from "./PlaceForm.module.css";
 import ErrorModal from "../../shared/component/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/component/UIElements/LoadingSpinner";
+import ImageUpload from "../../shared/component/FormElements/ImageUpload";
 
 const NewPlace = () => {
   const navigate = useNavigate();
@@ -32,6 +33,10 @@ const NewPlace = () => {
         value: "",
         isValid: false,
       },
+      image: {
+        value: null,
+        isValid: false,
+      },
     },
     false
   );
@@ -40,17 +45,16 @@ const NewPlace = () => {
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
     try {
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append("address", formState.inputs.address.value);
+      formData.append("image", formState.inputs.image.value);
+      formData.append("creator", userId);
+
       await sendRequest("http://localhost:5000/api/places", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          address: formState.inputs.address.value,
-          creator: userId,
-        }),
+        body: formData,
       });
       navigate("../");
     } catch (err) {}
@@ -89,6 +93,14 @@ const NewPlace = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valuid description(at least 5 character)."
           onInput={inputHandler}
+        />
+
+        <ImageUpload
+          id="image"
+          onInput={inputHandler}
+          errorText={
+            "Please provide an image with (.png/.jpeg/.jpg) format only."
+          }
         />
 
         <Button type="submit" disabled={!formState.isValid}>
