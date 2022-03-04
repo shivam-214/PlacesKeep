@@ -15,7 +15,10 @@
 .mapboxgl-popup {
   max-width: 100px;
 }
+
 .mapboxgl-popup-content {
+  /* background-image: url("../../../assets/mapbox-icon.png");
+  background-size: cover; */
   text-align: center;
   font-family: "Open Sans", sans-serif;
 }

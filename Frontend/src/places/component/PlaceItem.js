@@ -63,10 +63,11 @@ const PlaceItem = (props) => {
       >
         <div className={"map-container"}>
           <Map
+            createplace={false}
             center={props.coordinates}
-            zoom={16}
-            markedPlaceTitle={props.title}
-            markedPlaceDescription={props.description}
+            placeImage={props.image}
+            title={props.title}
+            zoom={15}
           ></Map>
         </div>
       </Modal>

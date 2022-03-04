@@ -7,7 +7,7 @@ const Place = require("../models/places");
 const User = require("../models/user");
 const httpError = require("../models/http-error");
 
-const getCoordsForAddress = require("../util/location");
+// const getCoordsForAddress = require("../util/location");
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
@@ -72,27 +72,23 @@ const createPlace = async (req, res, next) => {
     );
   }
 
-  const { title, description, address, creator } = req.body;
-
-  let coordinates;
-  try {
-    coordinates = await getCoordsForAddress(address);
-  } catch (error) {
-    return next(error);
-  }
+  const { title, description, address, lng, lat } = req.body;
 
   const createdPlace = new Place({
     title,
     description,
     address,
-    location: coordinates,
+    location: {
+      lng: lng,
+      lat: lat,
+    },
     image: req.file.path,
-    creator,
+    creator: req.userData.userId,
   });
 
   let user;
   try {
-    user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     const error = new httpError(
       "Creating place failed, please try again.",

@@ -1,9 +1,11 @@
-import React, { Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import classes from "./PlaceForm.module.css";
 
+import Modal from "../../shared/component/UIElements/Modal";
+import Map from "../../shared/component/UIElements/Map";
 import Button from "../../shared/component/FormElements/Button";
 import Input from "../../shared/component/FormElements/Input";
 import {
@@ -17,9 +19,14 @@ import LoadingSpinner from "../../shared/component/UIElements/LoadingSpinner";
 import ImageUpload from "../../shared/component/FormElements/ImageUpload";
 
 const NewPlace = () => {
+  const [showMap, setShowMap] = useState(false);
+  const [coordinates, setCoordinates] = useState();
+
   const navigate = useNavigate();
-  const userId = useSelector((state) => state.auth.userId);
+
   const token = useSelector((state) => state.auth.token);
+
+  const { isLoading, error, clearError, sendRequest } = useHttp();
   const [formState, inputHandler] = useForm(
     {
       title: {
@@ -34,6 +41,10 @@ const NewPlace = () => {
         value: "",
         isValid: false,
       },
+      coordinates: {
+        value: null,
+        isValid: false,
+      },
       image: {
         value: null,
         isValid: false,
@@ -41,7 +52,25 @@ const NewPlace = () => {
     },
     false
   );
-  const { isLoading, error, clearError, sendRequest } = useHttp();
+
+  const openMapHandler = () => {
+    setShowMap(true);
+  };
+
+  const closeMapHandler = () => {
+    setShowMap(false);
+  };
+
+  const coordinatesHandler = (coords) => {
+    setCoordinates(coords);
+    console.log(coords);
+    inputHandler("coordinates", coords, true);
+  };
+
+  const resetCoordinatesHandler = () => {
+    setCoordinates(null);
+    inputHandler("coordinates", null, false);
+  };
 
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
@@ -50,8 +79,9 @@ const NewPlace = () => {
       formData.append("title", formState.inputs.title.value);
       formData.append("description", formState.inputs.description.value);
       formData.append("address", formState.inputs.address.value);
+      formData.append("lat", formState.inputs.coordinates.value.lat);
+      formData.append("lng", formState.inputs.coordinates.value.lng);
       formData.append("image", formState.inputs.image.value);
-      formData.append("creator", userId);
 
       await sendRequest("http://localhost:5000/api/places", {
         method: "POST",
@@ -67,6 +97,33 @@ const NewPlace = () => {
   return (
     <Fragment>
       <ErrorModal error={error} onClear={clearError} />
+      <Modal
+        show={showMap}
+        onCancel={closeMapHandler}
+        header={"Double click to Mark a place."}
+        contentClass={"place-item__modal-content"}
+        footerClass={"place-item__modal-actions"}
+        footer={
+          <Fragment>
+            <Button inverse onClick={resetCoordinatesHandler}>
+              RESET
+            </Button>
+            <Button onClick={closeMapHandler}>CLOSE</Button>
+          </Fragment>
+        }
+      >
+        <div className={"map-container"}>
+          <Map
+            createplace={true}
+            coordinates={coordinates}
+            center={{
+              lng: coordinates ? coordinates.lng : "78.46180869300093",
+              lat: coordinates ? coordinates.lat : "22.27333407191034",
+            }}
+            getCoordinates={coordinatesHandler}
+          ></Map>
+        </div>
+      </Modal>
       <form onSubmit={placeSubmitHandler} className={classes["place-form"]}>
         {isLoading && <LoadingSpinner asOverlay />}
         <Input
@@ -85,7 +142,7 @@ const NewPlace = () => {
           label="description"
           element="textarea"
           validators={[VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valuid description(at least 5 character)."
+          errorText="Please enter a valid description(at least 5 character)."
           onInput={inputHandler}
         />
 
@@ -95,9 +152,14 @@ const NewPlace = () => {
           label="address"
           element="textarea"
           validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valuid description(at least 5 character)."
+          errorText="Please enter a valid address."
           onInput={inputHandler}
         />
+
+        <Button inverse type="button" onClick={openMapHandler}>
+          MARK PLACE ON MAP
+        </Button>
+        {!coordinates && <p>Please mark the place on map.</p>}
 
         <ImageUpload
           id="image"
@@ -106,7 +168,6 @@ const NewPlace = () => {
             "Please provide an image with (.png/.jpeg/.jpg) format only."
           }
         />
-
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE
         </Button>

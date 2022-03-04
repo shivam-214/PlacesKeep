@@ -12,9 +12,11 @@ const authSlice = createSlice({
   initialState: intitalAuthState,
   reducers: {
     login(state, action) {
-      const tokenExprirationTime =
-        action.payload.expiration ||
-        new Date(new Date().getTime() + 1000 * 60 * 60);
+      const storedExpirationTime = action.payload.expiration;
+
+      const tokenExprirationTime = storedExpirationTime
+        ? new Date(storedExpirationTime)
+        : new Date(new Date().getTime() + 1000 * 60 * 60);
 
       state.tokenExpirationTimeInMs = tokenExprirationTime.toString();
       localStorage.setItem(

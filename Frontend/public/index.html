@@ -13,7 +13,7 @@
 
     <!--Stylesheet for mapbox map api-->
     <link
-      href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
+      href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
       rel="stylesheet"
     />
     <link
@@ -29,7 +29,7 @@
     <title>PlacesKeep</title>
 
     <!--Scipt for mapbox map api-->
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
 
     <!-- Script for google map api -->
@@ -37,24 +37,12 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFCySSkNr4iqi3WsFwKRF_iDGLVicPVoM"
       async
     ></script> -->
-
-    <!-- Sripts for Here Map API -->
-    <!-- <script
-      type="text/javascript"
-      src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
-    ></script> -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css"
+      type="text/css"
+    />
   </head>
 
   <body>
@@ -63,6 +51,5 @@
     <div id="modal-root"></div>
     <div id="drawer-root"></div>
     <div id="root"></div>
-
   </body>
 </html>

@@ -53,6 +53,7 @@ const Input = (props) => {
       <input
         id={props.id}
         type={props.type}
+        style={props.style}
         placeholder={props.placeholder}
         value={inputState.value}
         onChange={changeHandler}
