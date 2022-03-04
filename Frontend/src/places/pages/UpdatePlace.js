@@ -19,7 +19,10 @@ import LoadingSpinner from "../../shared/component/UIElements/LoadingSpinner";
 
 const UpdatePlace = (prop) => {
   const navigate = useNavigate();
+
   const userId = useSelector((state) => state.auth.userId);
+  const token = useSelector((state) => state.auth.token);
+
   const [identifiedPlace, setIdentifiedPlace] = useState();
   const [formState, inputHandler, setFormHandler] = useForm(
     {
@@ -85,6 +88,7 @@ const UpdatePlace = (prop) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify({
           title: formState.inputs.title.value,

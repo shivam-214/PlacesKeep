@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import classes from "./Map.module.css";
+
+import "./Map.css";
 
 //<--------------MapBox map api--------------------------------------->>
 const ACCESS_TOKEN =
@@ -9,8 +10,11 @@ window.mapboxgl.accessToken = ACCESS_TOKEN;
 
 const Map = (props) => {
   const mapRef = useRef();
-
-  const { center, zoom } = props;
+  const { center, zoom, markedPlaceTitle, markedPlaceDescription } = props;
+  // const [coord, setCoord] = useState({
+  //   lng: center.lng,
+  //   lat: center.lat,
+  // });
 
   useEffect(() => {
     const map = new window.mapboxgl.Map({
@@ -21,7 +25,31 @@ const Map = (props) => {
       pitch: 50,
     });
 
-    new window.mapboxgl.Marker().setLngLat([center.lng, center.lat]).addTo(map);
+    //<------------For Adding Events----------------->
+    // map.on("dblclick", (e) => {
+    //   e.preventDefault();
+
+    //   console.log(e);
+    //   const { lng, lat } = e.lngLat;
+
+    //   setCoord({
+    //     lng: lng,
+    //     lat: lat,
+    //   });
+    // });
+
+    const markerContent = document.createElement("div");
+    markerContent.className = "marker";
+
+    new window.mapboxgl.Marker(markerContent)
+      .setLngLat([center.lng, center.lat])
+      .setPopup(
+        new window.mapboxgl.Popup({ offset: 25 }) // add popups
+          .setHTML(
+            `<h3>${markedPlaceTitle}</h3><p>${markedPlaceDescription}</p>`
+          )
+      )
+      .addTo(map);
 
     //<------------For directions---------------------->
     // const directions = new window.MapboxDirections({
@@ -41,96 +69,14 @@ const Map = (props) => {
 
     //<------------Zoom in, Zoom out and Compass---------------------->
     map.addControl(new window.mapboxgl.NavigationControl());
-  }, [center, zoom]);
+  }, [center, zoom, markedPlaceTitle, markedPlaceDescription]);
 
   return (
     <div
       ref={mapRef}
-      className={`${classes.map} ${props.className}`}
+      className={`map ${props.className}`}
       style={props.style}
     ></div>
   );
 };
-//<----------USING GOOGLE MAPS JAVASCRIPT API(for developer purpose only)--------->
-
-// const Map = (props) => {
-//   const mapRef = useRef();
-
-//   const { center, zoom } = props;
-
-//   useEffect(() => {
-//     const map = new window.google.maps.Map(mapRef.current, {
-//       center: center,
-//       zoom: zoom,
-//     });
-
-//     new window.google.maps.Marker({ position: center, map: map });
-//   }, [center, zoom]);
-
-//   return (
-//     <div
-//       ref={mapRef}
-//       className={`${classes.map} ${props.className}`}
-//       style={props.style}
-//     ></div>
-//   );
-// };
-
-//<----------------Using Here Map JS Api------------------------->
-// const API_KEY = "lAQfpfm1BNm0ebJZJfEkGVk04cOmbnHn1LqZYHua3kI";
-
-// const Map = (props) => {
-//   const mapRef = useRef();
-
-//   const { center, zoom } = props;
-
-//   var platform = new window.H.service.Platform({
-//     apikey: API_KEY,
-//   });
-
-//   var defaultLayers = window.platform.createDefaultLayers();
-
-//   // Instantiate (and display) a map object:
-
-//   useEffect(() => {
-//     var map = new window.H.Map(
-//       document.getElementById("map"),
-//       defaultLayers.vector.normal.map,
-//       {
-//         center: center,
-//         zoom: zoom,
-//       }
-//     );
-
-//     var behavior = new window.H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-//     var ui = window.H.ui.UI.createDefault(map, defaultLayers);
-
-//     // Define a variable holding SVG mark-up that defines an icon image:
-//     var svgMarkup =
-//       '<svg width="24" height="24" ' +
-//       'xmlns="http://www.w3.org/2000/svg">' +
-//       '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
-//       'height="22" /><text x="12" y="18" font-size="12pt" ' +
-//       'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
-//       'fill="white">P</text></svg>';
-
-//     // Create an icon, an object holding the latitude and longitude, and a marker:
-//     var icon = new window.H.map.Icon(svgMarkup);
-//     var marker = new window.H.map.Marker(center, { icon: icon });
-
-//     // Add the marker to the map and center the map at the location of the marker:
-//     map.addObject(marker);
-//     map.setCenter(center);
-//   }, [center, zoom]);
-
-//   return (
-//     <div
-//       ref={mapRef}
-//       id="map"
-//       className={`${classes.map} ${props.className}`}
-//       style={props.style}
-//     ></div>
-//   );
-// };
-
 export default Map;

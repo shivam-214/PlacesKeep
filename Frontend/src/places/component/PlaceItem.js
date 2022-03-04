@@ -12,9 +12,12 @@ import ErrorModal from "../../shared/component/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/component/UIElements/LoadingSpinner";
 
 const PlaceItem = (props) => {
-  const userId = useSelector((state) => state.auth.userId);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const userId = useSelector((state) => state.auth.userId);
+  const token = useSelector((state) => state.auth.token);
+
   const { isLoading, error, clearError, sendRequest } = useHttp();
 
   const openMapHandler = () => {
@@ -39,7 +42,9 @@ const PlaceItem = (props) => {
       await sendRequest(`http://localhost:5000/api/places/${props.id}`, {
         method: "DELETE",
         body: null,
-        headers: {},
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       });
       props.onDelete(props.id);
     } catch (err) {}
@@ -57,7 +62,12 @@ const PlaceItem = (props) => {
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
         <div className={"map-container"}>
-          <Map center={props.coordinates} zoom={16}></Map>
+          <Map
+            center={props.coordinates}
+            zoom={16}
+            markedPlaceTitle={props.title}
+            markedPlaceDescription={props.description}
+          ></Map>
         </div>
       </Modal>
       <Modal

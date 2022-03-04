@@ -90,7 +90,12 @@ const Auth = () => {
             }),
           }
         );
-        dispatch(authActions.login(responseData.user.id));
+        dispatch(
+          authActions.login({
+            userId: responseData.userId,
+            token: responseData.token,
+          })
+        );
       } catch (err) {}
     } else {
       try {
@@ -107,7 +112,12 @@ const Auth = () => {
             body: formData,
           }
         );
-        dispatch(authActions.login(responseData.user.id));
+        dispatch(
+          authActions.login({
+            userId: responseData.userId,
+            token: responseData.token,
+          })
+        );
       } catch (err) {}
     }
   };
@@ -155,7 +165,7 @@ const Auth = () => {
 
           <Input
             id="password"
-            type="text"
+            type="password"
             label="Password"
             element="input"
             validators={[VALIDATOR_MINLENGTH(6)]}

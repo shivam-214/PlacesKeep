@@ -1,19 +1,62 @@
-import React, { Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { authActions } from "./store/auth-slice";
 
 import Users from "./user/pages/User";
-import NewPlace from "./places/pages/NewPlace";
-import MainNavigation from "./shared/component/Navigation/MainNavigation";
-import UsersPlaces from "./places/pages/UserPlaces";
-import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./user/pages/Auth";
 
+import MainNavigation from "./shared/component/Navigation/MainNavigation";
+
+import NewPlace from "./places/pages/NewPlace";
+import UsersPlaces from "./places/pages/UserPlaces";
+import UpdatePlace from "./places/pages/UpdatePlace";
+
+let logoutTimer;
+
 function App() {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const tokenExpirationTimeInMs = useSelector(
+    (state) => state.auth.tokenExpirationTimeInMs
+  );
+
+  useEffect(() => {
+    if (token && tokenExpirationTimeInMs) {
+      const remainingTime =
+        new Date(tokenExpirationTimeInMs).getTime() - new Date().getTime();
+
+      const logoutHandler = () => {
+        dispatch(authActions.logout());
+      };
+
+      logoutTimer = setTimeout(logoutHandler, remainingTime);
+    } else {
+      clearTimeout(logoutTimer);
+    }
+  }, [token, tokenExpirationTimeInMs, dispatch]);
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("userData"));
+
+    if (
+      storedData &&
+      storedData.token &&
+      new Date(storedData.expiration).getTime() > new Date().getTime()
+    ) {
+      dispatch(
+        authActions.login({
+          userId: storedData.userId,
+          token: storedData.token,
+          expiration: new Date(storedData.expiration),
+        })
+      );
+    }
+  }, [dispatch]);
 
   let routes;
-  if (isLoggedIn) {
+  if (token) {
     routes = (
       <Routes>
         <Route path="/" element={<Users />} />
