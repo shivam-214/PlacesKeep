@@ -120,6 +120,8 @@ const NewPlace = () => {
               lng: coordinates ? coordinates.lng : "78.46180869300093",
               lat: coordinates ? coordinates.lat : "22.27333407191034",
             }}
+            title={formState.inputs.title.value}
+            description={formState.inputs.description.value}
             getCoordinates={coordinatesHandler}
           ></Map>
         </div>
@@ -156,7 +158,7 @@ const NewPlace = () => {
           onInput={inputHandler}
         />
 
-        <Button inverse type="button" onClick={openMapHandler}>
+        <Button type="button" onClick={openMapHandler}>
           MARK PLACE ON MAP
         </Button>
         {!coordinates && <p>Please mark the place on map.</p>}
@@ -168,9 +170,11 @@ const NewPlace = () => {
             "Please provide an image with (.png/.jpeg/.jpg) format only."
           }
         />
-        <Button type="submit" disabled={!formState.isValid}>
-          ADD PLACE
-        </Button>
+        <div className="center">
+          <Button style={{padding:"0.5rem 4rem"}}type="submit" disabled={!formState.isValid}>
+            ADD PLACE
+          </Button>
+        </div>
       </form>
     </Fragment>
   );

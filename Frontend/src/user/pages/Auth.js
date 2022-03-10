@@ -128,7 +128,7 @@ const Auth = () => {
       <Card className={classes.authentication}>
         {isLoading && <LoadingSpiner asOverlay />}
         <form onSubmit={authSubmitHandler}>
-          <h2>{isLoginMode ? "Login Required" : "Signup Required"}</h2>
+          <h2>{isLoginMode ? "Login" : "Signup"}</h2>
           <hr />
           {!isLoginMode && (
             <Input

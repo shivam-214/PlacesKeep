@@ -15,6 +15,7 @@
   }
   
   .nav-links a {
+    border-radius: 15px;
     border: 1px solid transparent;
     color: #2b3d57;
     text-decoration: none;
@@ -24,8 +25,8 @@
   .nav-links a:hover,
   .nav-links a:active,
   .nav-links a.active {
-    background: #ffd900;  /*#fbeb31 #fedc3d #f57e7e #e7e8d1 #7fe7dc #ff9a8d #f7c331  #f8df00*/
-    border-color: #2b3d57;
+    background: #CCFFCC;  /*#fbeb31 #fedc3d #f57e7e #e7e8d1 #7fe7dc #ff9a8d #f7c331  #f8df00*/
+    border-color: white;
     color: #2b3d57; 
   }
   
@@ -70,7 +71,7 @@
     
     .nav-links button:hover,
     .nav-links button:active {
-      background: #ffd900;
+      background: #CCFFCC;
       color: #2b3d57;
     }
   }
