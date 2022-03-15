@@ -1,15 +1,15 @@
-import React, { Fragment } from "react";
+import React, { Fragment, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Users from "./user/pages/User";
-import Auth from "./user/pages/Auth";
-
-import MainNavigation from "./shared/component/Navigation/MainNavigation";
-
-import NewPlace from "./places/pages/NewPlace";
-import UsersPlaces from "./places/pages/UserPlaces";
-import UpdatePlace from "./places/pages/UpdatePlace";
 import useAuth from "./shared/hooks/auth-hook";
+import MainNavigation from "./shared/component/Navigation/MainNavigation";
+import LoadingSpinner from "./shared/component/UIElements/LoadingSpinner";
+
+const Users = React.lazy(() => import("./user/pages/User"));
+const Auth = React.lazy(() => import("./user/pages/Auth"));
+const NewPlace = React.lazy(() => import("./places/pages/NewPlace"));
+const UsersPlaces = React.lazy(() => import("./places/pages/UserPlaces"));
+const UpdatePlace = React.lazy(() => import("./places/pages/UpdatePlace"));
 
 function App() {
   const { token } = useAuth();
@@ -39,7 +39,17 @@ function App() {
   return (
     <Fragment>
       <MainNavigation />
-      <main>{routes}</main>
+      <main>
+        <Suspense
+          fallback={
+            <div className="center">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          {routes}
+        </Suspense>
+      </main>
     </Fragment>
   );
 }
