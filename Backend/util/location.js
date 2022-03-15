@@ -1,9 +1,7 @@
 const axios = require("axios");
 const httpError = require("../models/http-error");
 
-const ACCESS_TOKEN =
-  "pk.eyJ1Ijoic2hpdmFtLTIxNCIsImEiOiJjbDA0eXN1anMwanI4M2Nxd2U4cmthaTdmIn0.dG_tl0WkmBFP3K32TlEr5A";
-// const API_KEY = "QEWebmTB8hQukiGayFs_kjIOGHBJ92-fM35XyKrow-w"; //API_KEY for "hereapi" geocoding
+const ACCESS_TOKEN = process.env.MAPBOX_APIKEY;
 
 async function getCoordsForAddress(address) {
   const response = await axios.get(

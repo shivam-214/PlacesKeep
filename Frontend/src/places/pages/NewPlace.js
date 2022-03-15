@@ -83,7 +83,7 @@ const NewPlace = () => {
       formData.append("lng", formState.inputs.coordinates.value.lng);
       formData.append("image", formState.inputs.image.value);
 
-      await sendRequest("http://localhost:5000/api/places", {
+      await sendRequest(process.env.REACT_APP_BACKEND_URL + "/places", {
         method: "POST",
         body: formData,
         headers: {
@@ -171,7 +171,11 @@ const NewPlace = () => {
           }
         />
         <div className="center">
-          <Button style={{padding:"0.5rem 4rem"}}type="submit" disabled={!formState.isValid}>
+          <Button
+            style={{ padding: "0.5rem 4rem" }}
+            type="submit"
+            disabled={!formState.isValid}
+          >
             ADD PLACE
           </Button>
         </div>

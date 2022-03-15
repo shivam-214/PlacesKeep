@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import "./Map.css";
 
 //<--------------MapBox map api--------------------------------------->>
-window.mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN;
+window.mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_APIKEY;
 
 const Map = (props) => {
   const mapRef = useRef();

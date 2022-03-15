@@ -44,7 +44,7 @@ const UpdatePlace = (prop) => {
     const fetchPlaces = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/places/${placeId}`
+          process.env.REACT_APP_BACKEND_URL + "/places/" + placeId
         );
         setIdentifiedPlace(responseData.place);
         setFormHandler(
@@ -84,17 +84,20 @@ const UpdatePlace = (prop) => {
   const placeUpdateSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      await sendRequest(`http://localhost:5000/api/places/${placeId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-        }),
-      });
+      await sendRequest(
+        process.env.REACT_APP_BACKEND_URL + "/places/" + placeId,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            title: formState.inputs.title.value,
+            description: formState.inputs.description.value,
+          }),
+        }
+      );
       navigate("/" + userId + "/places");
     } catch (err) {}
   };
